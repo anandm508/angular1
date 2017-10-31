@@ -1,0 +1,110 @@
+<div class="container-fluid container-cards-pf">
+	<div class="row">
+		<div class="page-header">
+			<h1 id="page_header_label">Linear Motion Calculator</h1>
+		</div>
+	</div>
+	<div class="col-sm-12 col-lg-8">
+		<form name="calcForm" novalidate>
+			<div class="panel panel-default form-horizontal">
+				<div class="panel-body">
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="calc-inputs">Inputs:</label>
+						<div class="col-sm-6">
+							<select id="calc-inputs" class="form-control" required ng-model="inputOption" ng-options="opt.value as opt.label for opt in variables">
+								<option value="" selected disabled translate>Select Input Variables</option>
+							</select>
+						</div>
+						<div class="col-sm-3">
+							<button class="btn btn-default" ng-click="displayInput()">Add</button>
+							<button class="btn btn-default" ng-disabled="inputVariables.length === 0" ng-click="resetInput()">Reset</button>
+						</div>
+					</div>
+					<br >
+					<div class="form-group required" ng-if="inputVariables.u.visible">
+						<label class="col-sm-3 control-label" for="initialVelocity">u - Initial Velocity</label>
+						<div class="col-sm-4">
+							<input type="number" id="initialVelocity" class="form-control" required ng-model="inputVariables.u.val">
+						</div>
+						<label class="col-sm-5 control-label" for="initialVelocity">meter/sec</label>
+					</div>
+					<div class="form-group required" ng-if="inputVariables.v.visible">
+						<label class="col-sm-3 control-label" for="finalVelocity">v - Final Velocity</label>
+						<div class="col-sm-4">
+							<input type="number" id="finalVelocity" class="form-control" required ng-model="inputVariables.v.val">
+						</div>
+						<label class="col-sm-5 control-label" for="finalVelocity">meter/sec</label>
+					</div>
+					<div class="form-group required" ng-if="inputVariables.a.visible">
+						<label class="col-sm-3 control-label" for="acceleration">a - Acceleration</label>
+						<div class="col-sm-4">
+							<input type="number" id="acceleration" class="form-control" required ng-model="inputVariables.a.val">
+						</div>
+						<label class="col-sm-5 control-label" for="acceleration">meter/sec-square</label>
+					</div>
+					<div class="form-group required" ng-if="inputVariables.t.visible">
+						<label class="col-sm-3 control-label" for="time">t - Time</label>
+						<div class="col-sm-4">
+							<input type="number" min="0" id="time" class="form-control" required ng-model="inputVariables.t.val">
+						</div>
+						<label class="col-sm-5 control-label" for="time">sec</label>
+					</div>
+					<div class="form-group required" ng-if="inputVariables.s.visible">
+						<label class="col-sm-3 control-label" for="distance">s - Distance</label>
+						<div class="col-sm-4">
+							<input type="number" min="0" id="distance" class="form-control" required ng-model="inputVariables.s.val">
+						</div>
+						<label class="col-sm-5 control-label" for="distance">meter</label>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-12">
+							<div class="pull-right">
+								<button type="button" class="btn btn-primary" ng-click="calculate()">Calculate</button>
+							</div>
+						</div>
+					</div>
+					<br />
+					<br />
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="calc-outputs">Outputs:</label>
+						<div class="col-sm-6">
+							<select id="calc-outputs" class="form-control" ng-model="outputOption"
+								ng-options="opt.value as opt.label for opt in variables">
+								<option value="" selected disabled translate>Select Output Variables</option>
+							</select>
+						</div>
+						<div class="col-sm-3">
+							<button class="btn btn-default" ng-click="displayOutput()">Add</button>
+							<button class="btn btn-default" ng-disabled="outputVariables.length === 0" ng-click="resetOutput()">Reset</button>
+						</div>
+					</div>
+					<br />
+					<div class="form-group" ng-if="outputVariables.u.visible">
+						<label class="col-sm-3 control-label" for="initialVelocity">u - Initial Velocity</label> 
+						<label class="col-sm-5 control-label" for="initialVelocity">{{outputVariables.u.val}} meter/sec</label>
+					</div>
+					<div class="form-group" ng-if="outputVariables.v.visible">
+						<label class="col-sm-3 control-label" for="finalVelocity">v - Final Velocity</label> 
+						<label class="col-sm-5 control-label" for="finalVelocity">{{outputVariables.v.val}} meter/sec</label>
+					</div>
+					<div class="form-group" ng-if="outputVariables.a.visible">
+						<label class="col-sm-3 control-label" for="acceleration">a - Acceleration</label> 
+						<label class="col-sm-4 control-label" for="acceleration">{{outputVariables.a.val}} meter/sec-square</label>
+					</div>
+					<div class="form-group" ng-if="outputVariables.t.visible">
+						<label class="col-sm-3 control-label" for="time">t - Time</label>
+						<label class="col-sm-5 control-label" for="time">{{outputVariables.t.val}} sec</label>
+					</div>
+					<div class="form-group" ng-if="outputVariables.s.visible">
+						<label class="col-sm-3 control-label" for="distance">s - Distance</label> 
+						<label class="col-sm-5 control-label" for="distance">{{outputVariables.s.val}} meter</label>
+					</div>
+				</div>
+				<div ng-show="calcError" id="calc-error" ng-click="resetError()"
+					class="alert alert-danger fade in">
+					<span class="close" aria-label="close">&times;</span> <strong>Error : </strong><span>{{calcErrorMsg}}</span>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
