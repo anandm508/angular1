@@ -16,13 +16,13 @@
 // 11. It will run every 3 seconds and check for availability of slots. Once available, it will immediately book the slot. Refresh the page once you get the booking confirmation message.
 
 // Change the pincodes as per your city
-var pincodes = [283202,283102]
+var pincodes = [202001,202280];
 
 // Change the age as per your requirement
 var age = 18; //45,18
 
 // Change the district id as per the city you are living in
-var district_id = 622;
+var district_id = 623;
 
 // Keep the vaccine as per your need. Currently it will look for both the vaccines.
 var vaccines = ["COVISHIELD","COVAXIN","SPUTNIK V"];
@@ -31,7 +31,7 @@ var vaccines = ["COVISHIELD","COVAXIN","SPUTNIK V"];
 var dose = 1;
 
 // Change the date to the date of slot booking
-var vaccine_date = "21-05-2021";
+var vaccine_date = "07-06-2021";
 
 // Reference id of the person you are booking a slot for. Can find it written beside your name after you log in. 
 var beneficiaries = [66119476081580,66229455431599];
@@ -56,11 +56,13 @@ var trialCounter = 1;
   (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(newscript);
 })();
 
-function httpGet(method, theUrl) {
+function httpGet(method, theUrl, isPublic=true) {
   var xmlHttp = new XMLHttpRequest();
-  xmlHttp.open(method, theUrl, false); // false for synchronous request
-  xmlHttp.setRequestHeader("authorization", authorizationToken);
-  xmlHttp.withCredentials = false;
+  xmlHttp.open(method, theUrl, false); 
+  
+  if(!isPublic)
+	xmlHttp.setRequestHeader("authorization", authorizationToken);
+  
   xmlHttp.send(null);
 
   if(xmlHttp.status == 401){
@@ -72,7 +74,7 @@ function httpGet(method, theUrl) {
 
 function getCaptcha() {
   var url = host + "/v2/auth/getRecaptcha";
-  var data = JSON.parse(httpGet("POST", url)).captcha;
+  var data = JSON.parse(httpGet("POST", url,false)).captcha;
 
   var myWindow = window.open("", "MsgWindow", "width=200,height=100");
   myWindow.document.write(data);
@@ -81,7 +83,7 @@ function getCaptcha() {
 async function fetchByDistrict(captcha) {
   if (captcha.length > 0) {
     console.log("Check: ", trialCounter++);
-    url = host + "/v2/appointment/sessions/calendarByDistrict?district_id=" + district_id + "&date=" + vaccine_date;
+    url = host + "/v2/appointment/sessions/public/calendarByDistrict?district_id=" + district_id + "&date=" + vaccine_date;
 
     try {
       centers = JSON.parse(httpGet("GET", url)).centers;
@@ -100,7 +102,7 @@ async function fetchByDistrict(captcha) {
 		else if(dose==2)
 			available_capacity = session.available_capacity_dose2;
 
-        if (!booked && session.min_age_limit == age && available_capacity > 0 && vaccines.includes(session.vaccine) && pincodes.includes(center.pincode)) {
+        if (!booked && session.min_age_limit == age && available_capacity > 0 && vaccines.includes(session.vaccine) && pincodes.includes(center.pincode) && vaccine_date == session.date) {
           console.log("Vaccines available at : ", center.pincode, center.name, center.center_id, available_capacity);
 
           data = {
